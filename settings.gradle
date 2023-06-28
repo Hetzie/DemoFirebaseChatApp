@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "DemofirebaseChatApp"
+rootProject.name = "DemoFirebaseChatApp"
 include ':app'

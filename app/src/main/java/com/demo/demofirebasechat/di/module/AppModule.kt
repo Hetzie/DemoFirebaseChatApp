@@ -1,6 +1,7 @@
 package com.demo.demofirebasechat.di.module
 
 import android.content.Context
+import com.demo.demofirebasechat.datastore.MyDataStore
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -24,4 +25,9 @@ class AppModule {
     @Provides
     fun provideGson(): Gson = GsonBuilder().setLenient().create()
 
+    @Provides
+    @Singleton
+    fun provideMyDataStore(context: Context): MyDataStore {
+        return MyDataStore(context)
+    }
 }
