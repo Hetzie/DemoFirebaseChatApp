@@ -17,15 +17,14 @@ data class UserProfile(
 data class ChatModel(
     var senderUsername: String = "",
     var receiverUserName: String = "",
+    var createdAt: Date?=Date(),
     @PrimaryKey
-    var ChatId: String = "Chat:$senderUsername,$receiverUserName",
-    var messageList: MutableList<Message> = mutableListOf(),
-    var messageListSize: Int = messageList.size
+    var chatId: String = "Chat:$senderUsername,$receiverUserName",
+    var textMessage: String=""
 )
 
 data class Message(
     @ServerTimestamp
-    var createdAt: Date?=Date(),
     var textMessage: String = ""
 )
 

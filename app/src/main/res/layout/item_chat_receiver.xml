@@ -10,7 +10,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingStart="10dp"
         android:paddingEnd="150dp">
         <androidx.cardview.widget.CardView
@@ -19,6 +19,7 @@
             android:layout_marginVertical="1dp"
             app:cardBackgroundColor="@color/receiver_cv_color"
             app:cardCornerRadius="10dp"
+            android:outlineProvider="none"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -28,8 +29,7 @@
                 android:id="@+id/tvMessage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="10dp"
-                android:text="@{model.textMessage}" />
+                android:padding="10dp" />
 
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

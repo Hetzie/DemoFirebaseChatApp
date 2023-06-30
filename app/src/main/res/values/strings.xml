@@ -8,4 +8,5 @@
     <string name="log_out">Log out</string>
     <string name="display_name">Display name</string>
     <string name="hii_display_name_format">Hi, %1$s</string>
+    <string name="chatId_format">Chat:%1$s,%2$s</string>
 </resources>

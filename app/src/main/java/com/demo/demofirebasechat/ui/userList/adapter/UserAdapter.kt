@@ -29,7 +29,7 @@ import com.google.firebase.firestore.QuerySnapshot
 
 open class UserAdapter(
     var query: Query,
-    var activity: UserListActivity
+    var activity: UserListActivity,
 ) : RecyclerView.Adapter<UserAdapter.ViewHolder>(), EventListener<QuerySnapshot> {
 
     lateinit var binding: ItemUserBinding
@@ -37,8 +37,6 @@ open class UserAdapter(
     private val snapshot = ArrayList<DocumentSnapshot>()
     private var registration: ListenerRegistration? = null
     val dbData = FirebaseFirestore.getInstance().collection("Chats")
-
-
 
     inner class ViewHolder(itemView: View) : BaseViewHolder(itemView) {
         val mBinding = binding
@@ -50,30 +48,34 @@ open class UserAdapter(
             bundle.putString("ChatToDisplayName", getItem(position).displayName)
             bundle.putInt("ChatPosition", position)
             mBinding.clChat.setOnClickListener {
-                createChat(activity.userName?:"", getItem(position).userName)
-                activity.startNewActivity(ChatActivity::class.java, bundle = bundle)
+                createChat(activity.userName ?: "", getItem(position).userName, bundle)
             }
         }
     }
-    fun createChat(senderUserName: String, receiverUserName: String) {
-        val chat = ChatModel(senderUserName, receiverUserName, messageList = mutableListOf())
 
-        dbData.document(chat.ChatId).get()
+    fun createChat(senderUserName: String, receiverUserName: String, bundle: Bundle) {
+
+        val docId = listOf(senderUserName, receiverUserName).sorted()
+
+        Log.e("DOC_ID", docId.toString())
+
+        var chatId = "Chat:${docId[0]},${docId[1]}"
+        var chat =  ChatModel(senderUserName, receiverUserName, chatId = chatId)
+        bundle.putString("ChatId", chatId)
+
+        dbData.document(chatId).get()
             .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val document = it.result
-                    if (!document.exists()) {
-                        dbData.document(chat.ChatId).set(chat)
-                            .addOnSuccessListener {
-                                context.showToast("Chat created!")
-                            }
-                            .addOnFailureListener { e ->
-                                context.showToast(e.message.toString())
-                            }
-                    }
-
+                val document = it.result
+                if (document.exists()){
+                    Log.e("DocumentSnap", "Exist")
+                    activity.startNewActivity(ChatActivity::class.java, bundle = bundle)
+                }else {
+                    dbData.document(chatId).collection("messageList")
+                    activity.startNewActivity(ChatActivity::class.java, bundle = bundle)
                 }
+
             }
+
     }
 
 

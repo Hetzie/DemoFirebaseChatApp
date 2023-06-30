@@ -23,85 +23,25 @@ class ChatViewModel @Inject constructor(
     var receiverDisplayName = ""
     var senderUserName = ""
     var receiverUserName = ""
+    var chatId = ""
     var textMessage = MutableLiveData("")
     val dbData = FirebaseFirestore.getInstance().collection("Chats")
     val message = Message(textMessage = textMessage.value!!)
 
-
-    fun createChat() {
-        val chat = ChatModel(senderUserName, receiverUserName, messageList = mutableListOf())
-        dbData.document(chat.ChatId).get()
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val document = it.result
-                    if (!document.exists()) {
-                        dbData.document(chat.ChatId).set(chat)
-                            .addOnSuccessListener {
-                                context.showToast("Chat created!")
-                            }
-                            .addOnFailureListener { e ->
-                                context.showToast(e.message.toString())
-                            }
-                    }
-
-                }
-            }
-    }
-
     fun sendMessage(textMessage: String) {
-        val chat = ChatModel(senderUserName, receiverUserName, messageList = mutableListOf())
+        val chat =
+            ChatModel(senderUserName, receiverUserName, chatId = chatId, textMessage = textMessage)
 
-        dbData.document(chat.ChatId).get()
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val document = it.result
-                    if (document.exists()) {
-                        dbData.document(chat.ChatId)
-                            .update(
-                                "messageList",
-                                FieldValue.arrayUnion(Message(textMessage = textMessage))
-                            )
-                            .addOnSuccessListener { it ->
-                                context.showToast("done!!")
-                                viewModelScope.launch {
 
-                                }
-
-                            }.addOnFailureListener {
-                                context.showToast("error!!")
-                            }
-
-                    } else {
-                       /* dbData.document(chat.ChatId).set(chat)
-                            .addOnSuccessListener {
-                                context.showToast("data inserted.")
-
-                            }
-                            .addOnFailureListener { e ->
-                                context.showToast(e.message.toString())
-                            }*/
-                    }
-
-                    /*dbData.get()
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val document = it.result
-                    if (document.exists()) {
-                        dbData.
-                    } else {
-                        dbData.set(chat)
-                            .addOnSuccessListener {
-                                viewModelScope.launch {
-
-                                }
-                            }
-                            .addOnFailureListener { e ->
-                                context.showToast(e.message.toString())
-                            }
-                    }
+        dbData.document(chatId).collection("messageList").add(chat)
+            .addOnSuccessListener {
+                context.showToast("done!!")
+                viewModelScope.launch {
                 }
-            }*/
-                }
+
+            }.addOnFailureListener {
+                context.showToast("error!!")
             }
+
     }
 }

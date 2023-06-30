@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.demo.demofirebasechat.R
 import com.demo.demofirebasechat.base.BaseViewHolder
 import com.demo.demofirebasechat.data.dummy.ChatModel
+import com.demo.demofirebasechat.data.dummy.Message
 import com.demo.demofirebasechat.data.dummy.UserProfile
 import com.demo.demofirebasechat.databinding.ItemChatSenderBinding
 import com.demo.demofirebasechat.extentions.startNewActivity
@@ -43,17 +44,16 @@ open class QueryChatAdapter(
         val mBinding = binding
 
         override fun onBind(position: Int) {
-            mBinding.tvMessage.text = getItem(chatPosition).messageList[position].textMessage
+            /*mBinding.tvMessage.text = getItem(chatPosition).messageList[position].textMessage
             Log.e("MESSAGE", getItem(chatPosition).messageList[position].textMessage)
             if (position == getItem(chatPosition).messageList.lastIndex){
                 activity.binding.rvChat.scrollToPosition(position)
-            }
+            }*/
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
-
         binding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
             R.layout.item_chat_sender,
@@ -80,7 +80,7 @@ open class QueryChatAdapter(
         var chat: ChatModel
         snapshot[chatPosition].let { snapshot ->
             chat = snapshot.toObject(ChatModel::class.java)!!
-            Log.e("CHAT", chat.messageList.toString())
+//            Log.e("CHAT", chat.messageList.toString())
         }
         return chat
     }
@@ -129,11 +129,10 @@ open class QueryChatAdapter(
 
     override fun getItemCount(): Int {
         return if (snapshot.size!= 0) {
-            snapshot[chatPosition].toObject(ChatModel::class.java)?.messageList?.size ?: 0
+//            snapshot[chatPosition].toObject(ChatModel::class.java)?.messageList?.size ?: 0
+            0
         } else{
             0
         }
-
-
     }
 }

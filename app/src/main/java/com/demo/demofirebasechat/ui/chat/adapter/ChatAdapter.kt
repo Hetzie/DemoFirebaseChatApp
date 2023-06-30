@@ -28,13 +28,13 @@ import com.google.firebase.firestore.QuerySnapshot
 
 
 open class ChatAdapter(
-    val messageList: ArrayList<Message>
+    var messageList: ArrayList<DocumentSnapshot>,
+    var chatActivity: ChatActivity
 ) : RecyclerView.Adapter<ChatAdapter.ViewHolder>(){
 
     lateinit var senderBinding: ItemChatSenderBinding
     lateinit var receiverBinding: ItemChatReceiverBinding
     lateinit var context: Context
-    private val snapshot = ArrayList<DocumentSnapshot>()
     private var registration: ListenerRegistration? = null
     var SENDER_MESSAGE = 0
     var RECEIVER_MESSAGE = 1
@@ -44,14 +44,19 @@ open class ChatAdapter(
         val mSenderBinding = senderBinding
         val mReceiverBinding = receiverBinding
 
+        fun onBindType(position: Int, viewType: Int) {
 
+            Log.e("MESSAGE", messageList[position]["textMessage"].toString())
+
+            if (viewType == SENDER_MESSAGE) {
+                mSenderBinding.tvMessage.text = messageList[position].get("textMessage").toString()
+            }else{
+                mReceiverBinding.tvMessage.text = messageList[position].get("textMessage").toString()
+            }
+        }
 
         override fun onBind(position: Int) {
-            if (itemViewType == SENDER_MESSAGE) {
-                mSenderBinding.tvMessage.text = messageList[position].textMessage
-            }else{
-                mReceiverBinding.tvMessage.text = messageList[position].textMessage
-            }
+
         }
     }
 
@@ -77,9 +82,9 @@ open class ChatAdapter(
         }
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        this.ViewHolder(holder.itemView, holder.itemViewType).onBind(position)
+        holder.setIsRecyclable(false)
+        this.ViewHolder(holder.itemView, holder.itemViewType).onBindType(position, holder.itemViewType)
     }
 
     override fun getItemId(position: Int): Long {
@@ -92,12 +97,37 @@ open class ChatAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position % 2 == 0) {
+        return if (messageList[position].get("senderUsername").toString() == chatActivity.mViewModel.senderUserName) {
             SENDER_MESSAGE
         } else {
             RECEIVER_MESSAGE
         }
     }
+    fun updateData(newItems: ArrayList<DocumentSnapshot>) {
+        messageList = newItems
+        notifyDataSetChanged()
+    }
 
+    open fun onDocumentAdded(change: DocumentChange) {
+        messageList.add(change.newIndex, change.document)
+        notifyItemInserted(change.newIndex)
+        chatActivity.binding.rvChat.scrollToPosition(messageList.lastIndex)
+    }
+
+    open fun onDocumentModified(change: DocumentChange) {
+        if (change.oldIndex == change.newIndex) {
+            messageList[change.oldIndex] = change.document
+            notifyItemChanged(change.oldIndex)
+        } else {
+            messageList.removeAt(change.oldIndex)
+            messageList.add(change.newIndex, change.document)
+            notifyItemMoved(change.oldIndex, change.newIndex)
+        }
+    }
+
+    open fun onDocumentRemoved(change: DocumentChange) {
+        messageList.removeAt(change.oldIndex)
+        notifyItemRemoved(change.oldIndex)
+    }
 }
 
