@@ -6,11 +6,9 @@ import com.demo.demofirebasechat.BR
 import com.demo.demofirebasechat.R
 import com.demo.demofirebasechat.base.BaseActivity
 import com.demo.demofirebasechat.databinding.ActivityLoginBinding
-import com.demo.demofirebasechat.datastore.MyDataStore
 import com.demo.demofirebasechat.extentions.startNewActivity
 import com.demo.demofirebasechat.ui.register.RegisterActivity
 import com.demo.demofirebasechat.ui.userList.UserListActivity
-import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,7 +23,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() {
         setContentView(binding.root)
         myDataStore.getIsLogin.asLiveData().observe(this) {
             if (it) {
-                startNewActivity(UserListActivity::class.java, finish = true)
+                startNewActivity(UserListActivity::class.java, clearTask = true)
             }
         }
         onClicks()
@@ -52,16 +50,26 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() {
 
     private fun validate(): Boolean {
         var userNameError = true
+        var passwordError = true
         binding.apply {
             tilUsername.helperText = if (etUsername.text.toString().trim().isEmpty()) {
                 userNameError = false
                 "Please enter username"
             } else {
                 null
+            }
 
+            tilPassword.helperText = if (etPassword.text.toString().trim().isEmpty()) {
+                passwordError = false
+                "Please enter password"
+            }else if (etPassword.text.toString().length<8) {
+                passwordError = false
+                "Password must contain minimum 8 characters"
+            } else {
+                null
             }
         }
-        return userNameError
+        return userNameError && passwordError
     }
 
 }

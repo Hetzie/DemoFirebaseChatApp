@@ -10,6 +10,7 @@ data class UserProfile(
     @set:PropertyName("user_name")
     var userName: String = "",
     var displayName: String = "",
+    var password: String = ""
 //    var image: String = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyHbN-vM0IgUbHcT0CuE64gjgueTAgFyr_3ElBNpIGpmi4Xvfg"
 )
 

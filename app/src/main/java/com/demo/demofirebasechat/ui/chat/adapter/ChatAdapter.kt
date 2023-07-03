@@ -40,7 +40,7 @@ open class ChatAdapter(
     var RECEIVER_MESSAGE = 1
 
 
-    inner class ViewHolder(itemView: View, viewType: Int) : BaseViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : BaseViewHolder(itemView) {
         val mSenderBinding = senderBinding
         val mReceiverBinding = receiverBinding
 
@@ -76,15 +76,15 @@ open class ChatAdapter(
             false
         )
         return if (viewType == SENDER_MESSAGE) {
-            ViewHolder(senderBinding.root, SENDER_MESSAGE)
+            ViewHolder(senderBinding.root)
         } else {
-            ViewHolder(receiverBinding.root, RECEIVER_MESSAGE)
+            ViewHolder(receiverBinding.root)
         }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.setIsRecyclable(false)
-        this.ViewHolder(holder.itemView, holder.itemViewType).onBindType(position, holder.itemViewType)
+        this.ViewHolder(holder.itemView).onBindType(position, holder.itemViewType)
     }
 
     override fun getItemId(position: Int): Long {

@@ -30,7 +30,7 @@
                 android:layout_height="match_parent"
                 android:imeOptions="actionNext"
                 android:text="@={viewModel.username}"
-                android:inputType="textCapWords"
+                android:inputType="text"
                 android:hint="@string/username"/>
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -54,12 +54,33 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPassword"
+            android:layout_width="match_parent"
+            android:paddingHorizontal="24dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:passwordToggleEnabled="true"
+            app:layout_constraintTop_toBottomOf="@id/tilDisplayName">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:imeOptions="actionDone"
+                android:maxLength="15"
+                android:text="@={viewModel.password}"
+                android:inputType="textPassword"
+                android:hint="@string/password"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/tilDisplayName"
+            app:layout_constraintTop_toBottomOf="@id/tilPassword"
             android:text="@string/register"
             android:layout_margin="24dp"/>
 

@@ -2,6 +2,7 @@ package com.demo.demofirebasechat.ui.register
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.asLiveData
 import com.demo.demofirebasechat.BR
 import com.demo.demofirebasechat.R
 import com.demo.demofirebasechat.base.BaseActivity
@@ -23,6 +24,11 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding, RegisterViewModel
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         onClicks()
+        myDataStore.getIsLogin.asLiveData().observe(this) {
+            if (it) {
+                startNewActivity(UserListActivity::class.java, clearTask = true)
+            }
+        }
     }
 
     private fun onClicks() {
@@ -44,6 +50,7 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding, RegisterViewModel
     private fun validate(): Boolean {
         var userNameError = true
         var displayNameError = true
+        var passwordError = true
         binding.apply {
             tilUsername.helperText = if (etUsername.text.toString().trim().isEmpty()) {
                 userNameError = false
@@ -58,7 +65,17 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding, RegisterViewModel
             } else {
                 null
             }
+
+            tilPassword.helperText = if (etPassword.text.toString().trim().isEmpty()) {
+                passwordError = false
+                "Please enter password"
+            }else if (etPassword.text.toString().length<8) {
+                passwordError = false
+                "Password must contain minimum 8 characters"
+            } else {
+                null
+            }
         }
-        return userNameError && displayNameError
+        return userNameError && displayNameError && passwordError
     }
 }

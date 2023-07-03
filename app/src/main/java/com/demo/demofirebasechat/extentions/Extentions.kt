@@ -12,12 +12,20 @@ fun <T> Activity.startNewActivity(
     className: Class<T>,
     finish: Boolean = false,
     bundle: Bundle? = null,
+    clearTask: Boolean = false
 ) {
     hideKeyboard()
     val intent = Intent(this, className)
     bundle?.let {
         intent.putExtras(it)
     }
+
+    if (clearTask){
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+
     startActivity(intent)
     if (finish) {
         finish()
@@ -28,9 +36,7 @@ fun <T> Activity.startNewActivity(
 fun Context.hideKeyboard() {
     this as Activity
     val imm = this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-    //Find the currently focused view, so we can grab the correct window token from it.
     var view = currentFocus
-    //If no view currently has focus, create a new one, just so we can grab a window token from it
     if (view == null) {
         view = View(this)
     }
