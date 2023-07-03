@@ -34,7 +34,6 @@ fun <T> Activity.startNewActivity(
     if (finish) {
         finish()
     }
-
 }
 
 fun Context.hideKeyboard() {
