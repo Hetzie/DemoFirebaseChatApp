@@ -3,10 +3,12 @@ package com.demo.demofirebasechat.ui.chat.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.demo.demofirebasechat.R
@@ -16,7 +18,9 @@ import com.demo.demofirebasechat.data.dummy.Message
 import com.demo.demofirebasechat.data.dummy.UserProfile
 import com.demo.demofirebasechat.databinding.ItemChatReceiverBinding
 import com.demo.demofirebasechat.databinding.ItemChatSenderBinding
+import com.demo.demofirebasechat.extentions.toTimeAmPm
 import com.demo.demofirebasechat.ui.chat.ChatActivity
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
@@ -25,12 +29,13 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
+import java.util.Date
 
 
 open class ChatAdapter(
     var messageList: ArrayList<DocumentSnapshot>,
-    var chatActivity: ChatActivity
-) : RecyclerView.Adapter<ChatAdapter.ViewHolder>(){
+    var chatActivity: ChatActivity,
+) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     lateinit var senderBinding: ItemChatSenderBinding
     lateinit var receiverBinding: ItemChatReceiverBinding
@@ -44,14 +49,20 @@ open class ChatAdapter(
         val mSenderBinding = senderBinding
         val mReceiverBinding = receiverBinding
 
+        @RequiresApi(Build.VERSION_CODES.O)
         fun onBindType(position: Int, viewType: Int) {
 
             Log.e("MESSAGE", messageList[position]["textMessage"].toString())
 
             if (viewType == SENDER_MESSAGE) {
                 mSenderBinding.tvMessage.text = messageList[position].get("textMessage").toString()
-            }else{
-                mReceiverBinding.tvMessage.text = messageList[position].get("textMessage").toString()
+                mSenderBinding.createdAtTime.text =
+                    (messageList[position].get("createdAt") as Timestamp).toTimeAmPm("hh:mm a")
+            } else {
+                mReceiverBinding.tvMessage.text =
+                    messageList[position].get("textMessage").toString()
+                mReceiverBinding.createdAtTime.text =
+                    (messageList[position].get("createdAt") as Timestamp).toTimeAmPm("hh:mm a")
             }
         }
 
@@ -82,6 +93,7 @@ open class ChatAdapter(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.setIsRecyclable(false)
         this.ViewHolder(holder.itemView).onBindType(position, holder.itemViewType)
@@ -97,12 +109,15 @@ open class ChatAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (messageList[position].get("senderUsername").toString() == chatActivity.mViewModel.senderUserName) {
+        return if (messageList[position].get("senderUsername")
+                .toString() == chatActivity.mViewModel.senderUserName
+        ) {
             SENDER_MESSAGE
         } else {
             RECEIVER_MESSAGE
         }
     }
+
     fun updateData(newItems: ArrayList<DocumentSnapshot>) {
         messageList = newItems
         notifyDataSetChanged()

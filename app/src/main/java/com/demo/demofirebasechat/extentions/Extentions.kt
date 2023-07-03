@@ -1,5 +1,6 @@
 package com.demo.demofirebasechat.extentions
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -7,12 +8,15 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import com.google.firebase.Timestamp
+import java.text.SimpleDateFormat
+import java.util.Date
 
 fun <T> Activity.startNewActivity(
     className: Class<T>,
     finish: Boolean = false,
     bundle: Bundle? = null,
-    clearTask: Boolean = false
+    clearTask: Boolean = false,
 ) {
     hideKeyboard()
     val intent = Intent(this, className)
@@ -45,4 +49,10 @@ fun Context.hideKeyboard() {
 
 fun Context.showToast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+}
+
+@SuppressLint("SimpleDateFormat")
+fun Timestamp.toTimeAmPm(pattern: String?=null): String {
+    val sfd = SimpleDateFormat(pattern?:"dd-MM-yyyy HH:mm:ss")
+    return sfd.format(this.toDate())
 }
