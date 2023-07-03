@@ -15,7 +15,7 @@ android {
         minSdk 24
         targetSdk 34
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -39,8 +39,8 @@ android {
     //renaming build apk file
     applicationVariants.all { variant ->
         variant.outputs.all { v ->
-            def date = new Date().format('ddMMMyyyy_HHmmss')
-            def newName = "${variant.name}-${variant.versionName}-${variant.versionCode}-$date"
+            def date = new Date().format('dd-mm-yyyy')
+            def newName = "FirebaseChatApp_${variant.versionName}(${variant.versionCode})_$date"
             v.outputFileName = new File(outputFileName, newName + ".apk")
         }
     }
