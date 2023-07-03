@@ -36,6 +36,14 @@ android {
     buildFeatures {
         dataBinding true
     }
+    //renaming build apk file
+    applicationVariants.all { variant ->
+        variant.outputs.all { v ->
+            def date = new Date().format('ddMMMyyyy_HHmmss')
+            def newName = "${variant.name}-${variant.versionName}-${variant.versionCode}-$date"
+            v.outputFileName = new File(outputFileName, newName + ".apk")
+        }
+    }
 }
 
 dependencies {
