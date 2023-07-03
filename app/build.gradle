@@ -40,7 +40,7 @@ android {
     applicationVariants.all { variant ->
         variant.outputs.all { v ->
             def date = new Date().format('dd-mm-yyyy')
-            def newName = "FirebaseChatApp_${variant.versionName}(${variant.versionCode})_$date"
+            def newName = "FirebaseChatApp_version_${variant.versionName}_$date"
             v.outputFileName = new File(outputFileName, newName + ".apk")
         }
     }
