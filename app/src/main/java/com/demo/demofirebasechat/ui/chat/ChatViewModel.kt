@@ -35,11 +35,11 @@ class ChatViewModel @Inject constructor(
 
         dbData.document(chatId).collection("messageList").add(chat)
             .addOnSuccessListener {
-                context.showToast("done!!")
-                viewModelScope.launch {
-                }
-
-            }.addOnFailureListener {
+                context.showToast("sent!!")
+            }.addOnCompleteListener {
+                context.showToast("addOnCompleteListener!!")
+            }
+            .addOnFailureListener {
                 context.showToast("error!!")
             }
 

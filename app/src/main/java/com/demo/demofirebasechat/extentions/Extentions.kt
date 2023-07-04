@@ -10,7 +10,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
-import java.util.Date
 
 fun <T> Activity.startNewActivity(
     className: Class<T>,
@@ -51,7 +50,15 @@ fun Context.showToast(message: String) {
 }
 
 @SuppressLint("SimpleDateFormat")
-fun Timestamp.toTimeAmPm(pattern: String?=null): String {
+fun Timestamp.toTimeFormat(pattern: String?=null): String {
     val sfd = SimpleDateFormat(pattern?:"dd-MM-yyyy HH:mm:ss")
     return sfd.format(this.toDate())
+}
+
+fun View.visible(value: Boolean = true) {
+    visibility = if (value) {
+        View.VISIBLE
+    }else{
+        View.GONE
+    }
 }

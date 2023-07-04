@@ -14,6 +14,16 @@
         android:layout_height="wrap_content"
         android:paddingStart="10dp"
         android:paddingEnd="100dp">
+        <TextView
+            android:visibility="visible"
+            android:id="@+id/tvDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="09/09/2020"
+            android:paddingVertical="10dp"
+            android:layout_marginStart="90dp"
+            android:gravity="center_horizontal"
+            app:layout_constraintTop_toTopOf="parent"/>
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,7 +33,7 @@
             android:outlineProvider="none"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDate"
             app:layout_constraintEnd_toEndOf="parent">
 
             <LinearLayout
@@ -33,16 +43,16 @@
                 android:orientation="vertical">
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvMessage"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textColor="@color/black"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/createdAtTime"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textSize="8sp"
-                    android:gravity="start"
+                    android:layout_gravity="end"
                     android:textColor="@color/chat_time_color"
                     tools:ignore="SmallSp" />
 

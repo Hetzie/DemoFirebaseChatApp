@@ -64,7 +64,9 @@ class ChatActivity : BaseActivity<ActivityChatBinding, ChatViewModel>() {
                         when (change.type) {
                             DocumentChange.Type.ADDED -> chatAdapter.onDocumentAdded(change)
                             DocumentChange.Type.REMOVED -> chatAdapter.onDocumentRemoved(change)
-                            DocumentChange.Type.MODIFIED -> chatAdapter.onDocumentModified(change)
+                            DocumentChange.Type.MODIFIED -> {
+                                chatAdapter.onDocumentModified(change)
+                            }
                         }
                     }
                 }

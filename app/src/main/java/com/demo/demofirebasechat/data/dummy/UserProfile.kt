@@ -21,7 +21,8 @@ data class ChatModel(
     var createdAt: Date?=Date(),
     @PrimaryKey
     var chatId: String = "Chat:$senderUsername,$receiverUserName",
-    var textMessage: String=""
+    var textMessage: String="",
+    var status: Int=0,//0=sending,1=sent,2=delivered,3=seen,4=failed
 )
 
 data class Message(

@@ -65,6 +65,7 @@ open class UserAdapter(
 
         dbData.document(chatId).get()
             .addOnCompleteListener {
+                try {
                 val document = it.result
                 if (document.exists()){
                     Log.e("DocumentSnap", "Exist")
@@ -72,6 +73,10 @@ open class UserAdapter(
                 }else {
                     dbData.document(chatId).collection("messageList")
                     activity.startNewActivity(ChatActivity::class.java, bundle = bundle)
+                }
+
+                } catch (e: Exception) {
+                    context.showToast(e.message.toString().substringAfter(":"))
                 }
 
             }
