@@ -28,7 +28,7 @@ jobs:
         with:
           artifacts: "app/build/outputs/apk/**/*.apk"
           token: ${{ secrets.CICDTOKEN }}
-          tag: v1.0.0
+          tag: v1.0.1
 #
 #      - name: Upload to Google Drive
 #        uses: satackey/action-google-drive@v1
