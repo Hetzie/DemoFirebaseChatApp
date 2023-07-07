@@ -11,7 +11,6 @@ import com.demo.demofirebasechat.datastore.MyDataStore
 import com.demo.demofirebasechat.ui.login.LoginActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import com.squareup.okhttp.Dispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

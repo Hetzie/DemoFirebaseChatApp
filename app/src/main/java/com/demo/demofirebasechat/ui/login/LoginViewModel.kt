@@ -1,14 +1,12 @@
 package com.demo.demofirebasechat.ui.login
 
 import android.content.Context
-import android.content.Intent
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.demo.demofirebasechat.base.BaseViewModel
-import com.demo.demofirebasechat.data.dummy.UserProfile
 import com.demo.demofirebasechat.datastore.MyDataStore
-import com.demo.demofirebasechat.extentions.showToast
-import com.demo.demofirebasechat.ui.userList.UserListActivity
+import com.demo.demofirebasechat.extensions.Extensions
+import com.demo.demofirebasechat.extensions.showToast
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,6 +31,7 @@ class LoginViewModel @Inject constructor(
                     if (document.exists()) {
 
                         if (document["password"] == password.value) {
+//                            dbData.update("deviceToken", Extensions.FCM_TOKEN)
                             viewModelScope.launch {
                                 withContext(Dispatchers.IO) {
                                     myDataStore.setUserNameData(username.value!!)

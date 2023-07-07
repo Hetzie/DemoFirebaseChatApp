@@ -1,20 +1,14 @@
 package com.demo.demofirebasechat.ui.register
 
 import android.content.Context
-import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
-import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.demo.demofirebasechat.base.BaseViewModel
 import com.demo.demofirebasechat.data.dummy.UserProfile
 import com.demo.demofirebasechat.datastore.MyDataStore
-import com.demo.demofirebasechat.extentions.showToast
-import com.demo.demofirebasechat.ui.userList.UserListActivity
+import com.demo.demofirebasechat.extensions.Extensions
+import com.demo.demofirebasechat.extensions.showToast
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -44,7 +38,7 @@ class RegisterViewModel @Inject constructor(
                     } else {
                         dbData.set(profile)
                             .addOnSuccessListener {
-
+//                                dbData.update("deviceToken", Extensions.FCM_TOKEN.value)
                                 viewModelScope.launch {
                                     withContext(Dispatchers.IO) {
                                         myDataStore.setUserNameData(profile.userName)

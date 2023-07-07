@@ -1,0 +1,5 @@
+<vector android:height="10dp" android:viewportHeight="25"
+    android:viewportWidth="25" android:width="10dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="@color/chat_time_color" android:pathData="M22.08,1H2.92A1.92,1.92 0,0 0,1 2.92V22.08A1.92,1.92 0,0 0,2.92 24H22.08A1.92,1.92 0,0 0,24 22.08V2.92A1.92,1.92 0,0 0,22.08 1ZM23,22.08a0.92,0.92 0,0 1,-0.92 0.92H2.92A0.92,0.92 0,0 1,2 22.08V2.92A0.92,0.92 0,0 1,2.92 2H22.08a0.92,0.92 0,0 1,0.92 0.92Z"/>
+    <path android:fillColor="@color/chat_time_color" android:pathData="M13,12.33V5.5a0.5,0.5 0,0 0,-1 0v7a0.51,0.51 0,0 0,0.15 0.36l5.09,5a0.52,0.52 0,0 0,0.35 0.14,0.5 0.5,0 0,0 0.35,-0.86Z"/>
+</vector>

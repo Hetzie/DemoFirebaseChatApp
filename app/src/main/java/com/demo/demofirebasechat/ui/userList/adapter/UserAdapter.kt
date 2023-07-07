@@ -14,8 +14,8 @@ import com.demo.demofirebasechat.base.BaseViewHolder
 import com.demo.demofirebasechat.data.dummy.ChatModel
 import com.demo.demofirebasechat.data.dummy.UserProfile
 import com.demo.demofirebasechat.databinding.ItemUserBinding
-import com.demo.demofirebasechat.extentions.showToast
-import com.demo.demofirebasechat.extentions.startNewActivity
+import com.demo.demofirebasechat.extensions.showToast
+import com.demo.demofirebasechat.extensions.startNewActivity
 import com.demo.demofirebasechat.ui.chat.ChatActivity
 import com.demo.demofirebasechat.ui.userList.UserListActivity
 import com.google.firebase.firestore.DocumentChange
@@ -60,11 +60,11 @@ open class UserAdapter(
         Log.e("DOC_ID", docId.toString())
 
         var chatId = "Chat:${docId[0]},${docId[1]}"
-        var chat =  ChatModel(senderUserName, receiverUserName, chatId = chatId)
         bundle.putString("ChatId", chatId)
 
         dbData.document(chatId).get()
             .addOnCompleteListener {
+                try {
                 val document = it.result
                 if (document.exists()){
                     Log.e("DocumentSnap", "Exist")
@@ -72,6 +72,10 @@ open class UserAdapter(
                 }else {
                     dbData.document(chatId).collection("messageList")
                     activity.startNewActivity(ChatActivity::class.java, bundle = bundle)
+                }
+
+                } catch (e: Exception) {
+                    context.showToast(e.message.toString().substringAfter(":"))
                 }
 
             }

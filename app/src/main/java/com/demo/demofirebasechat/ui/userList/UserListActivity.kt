@@ -1,19 +1,15 @@
 package com.demo.demofirebasechat.ui.userList
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.asLiveData
 import com.demo.demofirebasechat.BR
 import com.demo.demofirebasechat.R
 import com.demo.demofirebasechat.base.BaseActivity
-import com.demo.demofirebasechat.data.dummy.UserProfile
 import com.demo.demofirebasechat.databinding.ActivityUserListBinding
-import com.demo.demofirebasechat.datastore.MyDataStore.Companion.dataStore
-import com.demo.demofirebasechat.extentions.startNewActivity
-import com.demo.demofirebasechat.ui.login.LoginActivity
-import com.demo.demofirebasechat.ui.register.RegisterActivity
+import com.demo.demofirebasechat.extensions.showToast
 import com.demo.demofirebasechat.ui.userList.adapter.UserAdapter
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -38,6 +34,14 @@ class UserListActivity : BaseActivity<ActivityUserListBinding, UserListViewModel
         myDataStore.getUserName.asLiveData().observe(this) {
             userName = it
             userAdapter.notifyDataSetChanged()
+            FirebaseMessaging.getInstance().subscribeToTopic(it)
+                .addOnCompleteListener { task ->
+                    var msg = "Subscribed to Notification"
+                    if (!task.isSuccessful) {
+                        msg = "Subscribe failed"
+                    }
+                    showToast(msg)
+                }
         }
 
         myDataStore.getDisplayName.asLiveData().observe(this) {

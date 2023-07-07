@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="receiver_cv_color">#80CAE4F6</color>
     <color name="sender_cv_color">#803CC7F1</color>
+    <color name="chat_time_color">#727373</color>
 </resources>
