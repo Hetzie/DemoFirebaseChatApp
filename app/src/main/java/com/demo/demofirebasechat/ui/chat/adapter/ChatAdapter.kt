@@ -1,7 +1,6 @@
 package com.demo.demofirebasechat.ui.chat.adapter
 
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.util.Log
@@ -13,22 +12,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.demo.demofirebasechat.R
 import com.demo.demofirebasechat.base.BaseViewHolder
-import com.demo.demofirebasechat.data.dummy.ChatModel
-import com.demo.demofirebasechat.data.dummy.Message
-import com.demo.demofirebasechat.data.dummy.UserProfile
 import com.demo.demofirebasechat.databinding.ItemChatReceiverBinding
 import com.demo.demofirebasechat.databinding.ItemChatSenderBinding
-import com.demo.demofirebasechat.extentions.toTimeAmPm
+import com.demo.demofirebasechat.extensions.toTimeFormat
+import com.demo.demofirebasechat.extensions.visible
 import com.demo.demofirebasechat.ui.chat.ChatActivity
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
 import java.util.Date
 
 
@@ -43,7 +35,9 @@ open class ChatAdapter(
     private var registration: ListenerRegistration? = null
     var SENDER_MESSAGE = 0
     var RECEIVER_MESSAGE = 1
-
+    val today = Timestamp(Date(System.currentTimeMillis())).toTimeFormat("dd/MM/yyyy")
+    var yesterday = Timestamp(Date(System.currentTimeMillis() - (1000 * 60 * 60 * 24)))
+        .toTimeFormat("dd/MM/yyyy")
 
     inner class ViewHolder(itemView: View) : BaseViewHolder(itemView) {
         val mSenderBinding = senderBinding
@@ -51,24 +45,79 @@ open class ChatAdapter(
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun onBindType(position: Int, viewType: Int) {
-
-            Log.e("MESSAGE", messageList[position]["textMessage"].toString())
+            val date = setDate(position)
+            val msg = messageList[position].get("textMessage").toString()
+            val createdTime =
+                (messageList[position].get("createdAt") as Timestamp).toTimeFormat("hh:mm a")
+            val status = (messageList[position].get("status") ?: 0).toString().toInt()
+            Log.e(
+                "POSITION->$position",
+                "STATUS->" + (messageList[position].get("status").toString())
+            )
 
             if (viewType == SENDER_MESSAGE) {
-                mSenderBinding.tvMessage.text = messageList[position].get("textMessage").toString()
-                mSenderBinding.createdAtTime.text =
-                    (messageList[position].get("createdAt") as Timestamp).toTimeAmPm("hh:mm a")
+                mSenderBinding.tvDate.visible(date.first)
+                mSenderBinding.tvDate.text = date.second
+                mSenderBinding.tvMessage.text = msg
+                mSenderBinding.createdAtTime.text = createdTime
+                when (status) {
+                    0 -> {
+                        mSenderBinding.ivStatus.setImageDrawable(context.getDrawable(R.drawable.ic_clock))
+                    }
+
+                    1 -> {
+                        mSenderBinding.ivStatus.setImageDrawable(context.getDrawable(R.drawable.ic_sent))
+                    }
+
+                    2 -> {
+                        mSenderBinding.ivStatus.setImageDrawable(context.getDrawable(R.drawable.ic_delivered))
+                    }
+
+                    3 -> {
+                        mSenderBinding.ivStatus.setImageDrawable(context.getDrawable(R.drawable.ic_delivered))
+                        mSenderBinding.ivStatus.setColorFilter(R.color.black)
+                    }
+
+                    else -> {
+                        mSenderBinding.ivStatus.setImageDrawable(context.getDrawable(R.drawable.ic_error))
+                    }
+                }
             } else {
-                mReceiverBinding.tvMessage.text =
-                    messageList[position].get("textMessage").toString()
-                mReceiverBinding.createdAtTime.text =
-                    (messageList[position].get("createdAt") as Timestamp).toTimeAmPm("hh:mm a")
+
+                mReceiverBinding.tvDate.visible(date.first)
+                mReceiverBinding.tvDate.text = date.second
+                mReceiverBinding.tvMessage.text = msg
+                mReceiverBinding.createdAtTime.text = createdTime
             }
         }
 
         override fun onBind(position: Int) {
 
         }
+    }
+
+    fun setDate(position: Int): Pair<Boolean, String> {
+        var date = false
+        var createdTime =
+            (messageList[position].get("createdAt") as Timestamp).toTimeFormat("dd/MM/yyyy")
+        if (position == 0 || diffSameDate(position - 1, position)) {
+            if (today == createdTime) {
+                createdTime = "Today"
+            } else if (yesterday == createdTime) {
+                createdTime = "Yesterday"
+            }
+            date = true
+        }
+        return Pair(date, createdTime)
+    }
+
+    private fun diffSameDate(position1: Int, position2: Int): Boolean {
+        if ((messageList[position1].get("createdAt") as Timestamp).toTimeFormat("dd/MM/yyyy")
+            == (messageList[position2].get("createdAt") as Timestamp).toTimeFormat("dd/MM/yyyy")
+        ) {
+            return false
+        }
+        return true
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -86,6 +135,7 @@ open class ChatAdapter(
             parent,
             false
         )
+
         return if (viewType == SENDER_MESSAGE) {
             ViewHolder(senderBinding.root)
         } else {
@@ -95,18 +145,18 @@ open class ChatAdapter(
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.setIsRecyclable(false)
-        this.ViewHolder(holder.itemView).onBindType(position, holder.itemViewType)
+        this.ViewHolder(holder.itemView)
+            .onBindType(position, holder.itemViewType)
     }
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
     }
 
-
     override fun getItemCount(): Int {
         return messageList.size
     }
+
 
     override fun getItemViewType(position: Int): Int {
         return if (messageList[position].get("senderUsername")
@@ -116,11 +166,6 @@ open class ChatAdapter(
         } else {
             RECEIVER_MESSAGE
         }
-    }
-
-    fun updateData(newItems: ArrayList<DocumentSnapshot>) {
-        messageList = newItems
-        notifyDataSetChanged()
     }
 
     open fun onDocumentAdded(change: DocumentChange) {

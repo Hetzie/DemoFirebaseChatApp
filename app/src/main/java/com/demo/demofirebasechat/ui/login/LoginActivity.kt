@@ -1,15 +1,19 @@
 package com.demo.demofirebasechat.ui.login
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.asLiveData
 import com.demo.demofirebasechat.BR
 import com.demo.demofirebasechat.R
 import com.demo.demofirebasechat.base.BaseActivity
 import com.demo.demofirebasechat.databinding.ActivityLoginBinding
-import com.demo.demofirebasechat.extentions.startNewActivity
+import com.demo.demofirebasechat.extensions.startNewActivity
 import com.demo.demofirebasechat.ui.register.RegisterActivity
 import com.demo.demofirebasechat.ui.userList.UserListActivity
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() {
@@ -21,6 +25,9 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+
+
         myDataStore.getIsLogin.asLiveData().observe(this) {
             if (it) {
                 startNewActivity(UserListActivity::class.java, clearTask = true)
@@ -71,5 +78,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() {
         }
         return userNameError && passwordError
     }
+
+
 
 }

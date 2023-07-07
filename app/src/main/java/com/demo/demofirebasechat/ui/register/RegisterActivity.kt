@@ -1,13 +1,12 @@
 package com.demo.demofirebasechat.ui.register
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.asLiveData
 import com.demo.demofirebasechat.BR
 import com.demo.demofirebasechat.R
 import com.demo.demofirebasechat.base.BaseActivity
 import com.demo.demofirebasechat.databinding.ActivityRegisterBinding
-import com.demo.demofirebasechat.extentions.startNewActivity
+import com.demo.demofirebasechat.extensions.startNewActivity
 import com.demo.demofirebasechat.ui.login.LoginActivity
 import com.demo.demofirebasechat.ui.userList.UserListActivity
 import dagger.hilt.android.AndroidEntryPoint

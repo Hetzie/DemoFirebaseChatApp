@@ -10,23 +10,36 @@ data class UserProfile(
     @set:PropertyName("user_name")
     var userName: String = "",
     var displayName: String = "",
-    var password: String = ""
+    var password: String = "",
+//    var deviceToken: String = ""
 //    var image: String = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyHbN-vM0IgUbHcT0CuE64gjgueTAgFyr_3ElBNpIGpmi4Xvfg"
 )
 
 @Entity
 data class ChatModel(
+    var docId: String = "",
     var senderUsername: String = "",
     var receiverUserName: String = "",
     var createdAt: Date?=Date(),
     @PrimaryKey
     var chatId: String = "Chat:$senderUsername,$receiverUserName",
-    var textMessage: String=""
+    var textMessage: String="",
+    var status: Int=0,//0=sending,1=sent,2=delivered,3=seen,4=failed
 )
 
 data class Message(
     @ServerTimestamp
     var textMessage: String = ""
+)
+
+data class PushNotification(
+    var data:ChatModel,
+    var to:String
+)
+
+data class NotificationData(
+    var title:String,
+    var message:String
 )
 
 

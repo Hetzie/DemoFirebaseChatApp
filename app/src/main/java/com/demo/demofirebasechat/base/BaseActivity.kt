@@ -15,7 +15,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.demo.demofirebasechat.datastore.MyDataStore
-import com.demo.demofirebasechat.extentions.hideKeyboard
+import com.demo.demofirebasechat.extensions.hideKeyboard
 import com.google.gson.Gson
 import javax.inject.Inject
 
